@@ -100,11 +100,22 @@ public class MyBot : IChessBot
     {
         int evalvalue;
         bool white = boardstate.IsWhiteToMove;
+        {
         boardstate.MakeMove(evalmove);
         }
         catch
         {
             Console.WriteLine(boardstate.CreateDiagram());
+        }
+        if (boardstate.IsInCheckmate())
+        {
+            boardstate.UndoMove(evalmove);
+            return 999900;
+        }
+        if (boardstate.IsDraw())
+        {
+            boardstate.UndoMove(evalmove);
+            return 0;
         }
         Move[] countermoves = boardstate.GetLegalMoves();
 
@@ -114,10 +125,14 @@ public class MyBot : IChessBot
             boardstate.MakeMove(countermove);
             if (boardstate.IsInCheckmate())
             {
+                boardstate.UndoMove(countermove);
+                boardstate.UndoMove(evalmove);
                 return -999900;
             }
             if (boardstate.IsDraw())
             {
+                boardstate.UndoMove(countermove);
+                boardstate.UndoMove(evalmove);
                 return 0;
             }
             responsescores.Add(Eval(boardstate));
