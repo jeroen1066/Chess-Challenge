@@ -29,7 +29,7 @@ public class MyBot : IChessBot
             Move[] movelist = {move};
             
             movedict.Add(movelist,status);
-            board.UndoMove(move);
+            //board.UndoMove(move);
             /*
 
             for several layers of analysis
@@ -98,15 +98,28 @@ public class MyBot : IChessBot
     }
     int Evaluatemove(Board boardstate, Move evalmove)
     {
+        int evalvalue;
         bool white = boardstate.IsWhiteToMove;
         boardstate.MakeMove(evalmove);
+        }
+        catch
+        {
+            Console.WriteLine(boardstate.CreateDiagram());
+        }
         Move[] countermoves = boardstate.GetLegalMoves();
-        Console.WriteLine("Beginning analysis:");
-        Console.WriteLine(countermoves);
+
         List<int> responsescores = new List<int>();        
         foreach (Move countermove in countermoves)
         {
             boardstate.MakeMove(countermove);
+            if (boardstate.IsInCheckmate())
+            {
+                return -999900;
+            }
+            if (boardstate.IsDraw())
+            {
+                return 0;
+            }
             responsescores.Add(Eval(boardstate));
             boardstate.UndoMove(countermove);
             //Console.WriteLine(Eval(boardstate));
