@@ -73,10 +73,12 @@ public class MyBot : IChessBot
         return moveToPlay;
     }
     int Eval(Board board)
+    //Function that evaluates the board, with advantage for white as positive scores. 
     {
         int[] valuelist = {100,300,300,500,900,999900,-100,-300,-300,-500,-900,-999900};
         PieceList[] pieces = board.GetAllPieceLists();
         int whitescore = 0;
+        //If the board is in checkmate, then the 
         if (board.IsInCheckmate())
         {
             whitescore = 999900;
@@ -99,18 +101,19 @@ public class MyBot : IChessBot
         bool white = boardstate.IsWhiteToMove;
         boardstate.MakeMove(evalmove);
         Move[] countermoves = boardstate.GetLegalMoves();
-        Console.WriteLine("Beginning analysis");
+        Console.WriteLine("Beginning analysis:");
         Console.WriteLine(countermoves);
-        int[] responsescores = {0,0};        
+        List<int> responsescores = new List<int>();        
         foreach (Move countermove in countermoves)
         {
             boardstate.MakeMove(countermove);
-            responsescores.Append(Eval(boardstate));
+            responsescores.Add(Eval(boardstate));
             boardstate.UndoMove(countermove);
-            Console.WriteLine(Eval(boardstate));
-            Console.WriteLine("Evaluated");
+            //Console.WriteLine(Eval(boardstate));
+            //Console.WriteLine("Evaluated");
         }       
         int evalvalue;
+        Console.WriteLine(responsescores.Count());
         if (white)
         {
             evalvalue = responsescores.Min();
