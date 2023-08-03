@@ -100,13 +100,8 @@ public class MyBot : IChessBot
     {
         int evalvalue;
         bool white = boardstate.IsWhiteToMove;
-        {
         boardstate.MakeMove(evalmove);
-        }
-        catch
-        {
-            Console.WriteLine(boardstate.CreateDiagram());
-        }
+
         if (boardstate.IsInCheckmate())
         {
             boardstate.UndoMove(evalmove);
@@ -140,8 +135,7 @@ public class MyBot : IChessBot
             //Console.WriteLine(Eval(boardstate));
             //Console.WriteLine("Evaluated");
         }       
-        int evalvalue;
-        Console.WriteLine(responsescores.Count());
+        boardstate.UndoMove(evalmove);
         if (white)
         {
             evalvalue = responsescores.Min();
