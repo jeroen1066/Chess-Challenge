@@ -72,7 +72,7 @@ public class MyBot : IChessBot
         }
         return moveToPlay;
     }
-    int Eval(Board board)
+    static int Eval(Board board)
     //Function that evaluates the board, with advantage for white as positive scores. 
     {
         int[] valuelist = {100,300,300,500,900,999900,-100,-300,-300,-500,-900,-999900};
@@ -96,7 +96,7 @@ public class MyBot : IChessBot
         }
         return whitescore;
     }
-    int Evaluatemove(Board boardstate, Move evalmove)
+    public static int Evaluatemove(Board boardstate, Move evalmove)
     {
         int evalvalue;
         bool white = boardstate.IsWhiteToMove;
@@ -147,4 +147,25 @@ public class MyBot : IChessBot
 
         return evalvalue;
     }
+    class Treenode
+{
+    Board board;
+    int score;
+    List<Treenode> children;
+    Boolean solved;
+
+    public Treenode(Board board, Move precedingmove)
+    {
+        this.board = board;
+        this.board.MakeMove(precedingmove);
+        this.score = Evaluatemove(board,precedingmove);
+    }
+    public void update()
+    {
+
+    }
+
+    
 }
+}
+
