@@ -13,10 +13,14 @@ be updated depending on the outcome of the analysis.
 
 public class MyBot : IChessBot
 {
+    public static Random rng = new();
+
     public Move Think(Board board, Timer timer)
     {   
+        
+
         Move[] moves = board.GetLegalMoves();
-        Random rng = new();
+        
         Move moveToPlay = moves[rng.Next(moves.Length)];
         int currentscore = Eval(board);
         // initialise the bestscore at a very negative number, so that the evaluation of any board will update it.
@@ -142,6 +146,7 @@ public class MyBot : IChessBot
         }
         public void update(int updatescore)
         // Update the score of the current nodes depending on changes in lower nodes evaluation due to further analyses
+        // todo implement sorting of children based on analysis to accomodate choice 
         {
             score = childrenscores.Max();
             maxchildindex = childrenscores.IndexOf(score);
@@ -150,6 +155,7 @@ public class MyBot : IChessBot
         // Creation of the next moves as children of the current function and storing them in the children list. 
         // The scores of the children are stored in the childrenscores list to determine if the current score of the parent node needs to change.
         // If no moves are available, this node is instead declared solved.
+        //todo sort by score
         {   
             Move[] legalmoves = board.GetLegalMoves();
             if (legalmoves.Length == 0)
@@ -172,6 +178,11 @@ public class MyBot : IChessBot
             if (children != null)
             {
                 children.ElementAt(maxchildindex).evalchild();
+                // random distribution for broader analysis. It generates a number up to 2 to the power of the number of children. Then, the variable is converted into binary. This will create a value
+                // with a length that follows a 2^-i distribution, except for the last value which is double to make the total probability 1. this prioritises the most promising path, but allows alternate paths
+                // If more priority for the main path is required, then bases of 8, 10 or 16 can be used
+                // Oh god i will have to make these monstrocities to save brain capacity, won't I?
+                children.ElementAt(Convert.ToString(rng.Next(0,(int)Math.Pow(2,children.Count())), 2).Length).evalchild();
             }
             else if (!board.IsInCheckmate() & !board.IsDraw())
             {
