@@ -148,32 +148,59 @@ public class MyBot : IChessBot
         return evalvalue;
     }
     class Treenode
-{
-    Board board;
-    int score;
-    List<Treenode> children;
-    Boolean solved;
-
-    public Treenode(Board board, Move precedingmove)
     {
-        this.board = board;
-        this.board.MakeMove(precedingmove);
-        this.score = Evaluatemove(board,precedingmove);
-    }
-    public void update()
-    {
+        Board board;
+        int score;
+        List<Treenode> children;
+        List<int> childrenscores;
+        int maxchildindex;
+        Boolean solved;
+
+        public Treenode(Board board, Move precedingmove)
+        {
+            this.board = board;
+            this.board.MakeMove(precedingmove);
+            this.score = Evaluatemove(board,precedingmove);
+        }
+        public void update(int updatescore)
+        {
+            score = childrenscores.Max();
+            maxchildindex = childrenscores.IndexOf(score);
+        }
+        public void createchildren()
+        {   
+            Move[] legalmoves = board.GetLegalMoves();
+            if (legalmoves.Length == 0)
+            {
+                this.solved = true;
+            }
+            else
+            {
+                foreach (Move legalmove in legalmoves)
+                {        
+                    children.Append(new Treenode(board,legalmove));
+                    childrenscores.Append(children.Last().score);
+                }
+            }
+        }
+        public void evalchild()
+        {
+            if (children != null)
+            {
+                children.ElementAt(maxchildindex).evalchild();
+            }
+            else if (!board.IsInCheckmate() & !board.IsDraw())
+            {
+                createchildren();
+            }
+            else
+            {
+                
+            }
+
+        }
+
 
     }
-    public void createchildren()
-    {
-
-    }
-    public void evalchild()
-    {
-
-    }
-
-
-}
 }
 
