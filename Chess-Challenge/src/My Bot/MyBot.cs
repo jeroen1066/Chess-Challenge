@@ -164,8 +164,16 @@ public class MyBot : IChessBot
     {
 
     }
+    public void createchildren()
+    {
 
-    
+    }
+    public void evalchild()
+    {
+
+    }
+
+
 }
 }
 
