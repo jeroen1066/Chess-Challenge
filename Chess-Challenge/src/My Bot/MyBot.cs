@@ -124,6 +124,7 @@ public class MyBot : IChessBot
     class Treenode
     //class for each node in a tree containing all analysed positions
     {
+        Move movedone;
         Board board; 
         //boardstate at node
         int score; 
@@ -140,6 +141,7 @@ public class MyBot : IChessBot
         public Treenode(Board board, Move precedingmove) 
         // only the board an score values are initialised in this stage.
         {
+            this.movedone = precedingmove;
             this.board = board;
             this.board.MakeMove(precedingmove);
             this.score = Evaluatemove(board,precedingmove);
